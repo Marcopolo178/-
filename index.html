@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تمرين المفعول فيه للزمان</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Cairo:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --sky: #e0f7ff;
+      --sun: #FFD93D;
+      --coral: #FF6B6B;
+      --mint: #6BCB77;
+      --blue: #4D96FF;
+      --purple: #9B5DE5;
+      --orange: #FF9A3C;
+      --white: #ffffff;
+      --dark: #1a1a2e;
+      --card-bg: #ffffffee;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #ffeaa7 100%);
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Floating decorative shapes */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      width: 400px; height: 400px;
+      background: var(--purple);
+      top: -100px; left: -100px;
+      animation: float1 8s ease-in-out infinite;
+    }
+    body::after {
+      width: 300px; height: 300px;
+      background: var(--blue);
+      bottom: -80px; right: -80px;
+      animation: float2 10s ease-in-out infinite;
+    }
+
+    @keyframes float1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(30px,20px)} }
+    @keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-20px,30px)} }
+
+    .stars {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+    .star {
+      position: absolute;
+      background: var(--sun);
+      border-radius: 50%;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+    @keyframes twinkle { 0%,100%{opacity:.2;transform:scale(1)} 50%{opacity:.8;transform:scale(1.4)} }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* HEADER */
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .header-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 18px;
+      border-radius: 30px;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(155,93,229,0.4);
+    }
+    h1 {
+      font-family: 'Tajawal', sans-serif;
+      font-size: clamp(28px, 6vw, 52px);
+      font-weight: 900;
+      color: var(--dark);
+      text-shadow: 3px 3px 0px rgba(255,255,255,0.6);
+      line-height: 1.2;
+    }
+    h1 span {
+      background: linear-gradient(135deg, var(--coral), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      margin-top: 8px;
+      color: #555;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* PROGRESS BAR */
+    .progress-wrapper {
+      background: rgba(255,255,255,0.6);
+      border-radius: 20px;
+      padding: 12px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .progress-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--dark);
+      white-space: nowrap;
+    }
+    .progress-track {
+      flex: 1;
+      height: 10px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--mint), var(--blue));
+      border-radius: 10px;
+      transition: width 0.6s cubic-bezier(.4,0,.2,1);
+      width: 0%;
+    }
+    .score-badge {
+      background: var(--sun);
+      color: var(--dark);
+      font-size: 13px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* EXERCISE CARD */
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 1px 0 rgba(255,255,255,0.8) inset;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,255,255,0.7);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .exercise-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 80px; height: 80px;
+      border-radius: 0 24px 0 80px;
+      opacity: 0.12;
+    }
+    .exercise-card:nth-child(1)::before { background: var(--coral); }
+    .exercise-card:nth-child(2)::before { background: var(--blue); }
+    .exercise-card:nth-child(3)::before { background: var(--purple); }
+
+    .exercise-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.13); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .ex-num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800;
+      color: white; flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .ex-num.n1 { background: linear-gradient(135deg, var(--coral), #ff8e8e); }
+    .ex-num.n2 { background: linear-gradient(135deg, var(--blue), #74b9ff); }
+    .ex-num.n3 { background: linear-gradient(135deg, var(--purple), #c39bd3); }
+
+    .card-instruction {
+      font-size: 13px;
+      color: #888;
+      font-weight: 600;
+    }
+
+    /* SENTENCE TOKENS */
+    .sentence {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      direction: rtl;
+      margin-bottom: 20px;
+    }
+    .token {
+      font-family: 'Tajawal', sans-serif;
+      font-size: clamp(18px, 3.5vw, 26px);
+      font-weight: 700;
+      color: var(--dark);
+      padding: 8px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 2.5px solid transparent;
+      background: #f5f5f5;
+      transition: all 0.2s ease;
+      user-select: none;
+      position: relative;
+    }
+    .token:hover {
+      background: #eef2ff;
+      border-color: #c5ceff;
+      transform: scale(1.05);
+    }
+    .token.selected {
+      background: #e8f4fd;
+      border-color: var(--blue);
+      color: var(--blue);
+      box-shadow: 0 4px 14px rgba(77,150,255,0.25);
+      transform: scale(1.06);
+    }
+    .token.correct {
+      background: #d4f7dc;
+      border-color: var(--mint);
+      color: #27ae60;
+      animation: popIn 0.4s ease;
+    }
+    .token.wrong {
+      background: #ffe0e0;
+      border-color: var(--coral);
+      color: #e74c3c;
+      animation: shake 0.4s ease;
+    }
+    .token.missed {
+      background: #fff3cd;
+      border-color: var(--orange);
+      color: #d68910;
+      animation: popIn 0.4s ease;
+    }
+
+    @keyframes popIn {
+      0%{transform:scale(.9)} 60%{transform:scale(1.12)} 100%{transform:scale(1)}
+    }
+    @keyframes shake {
+      0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+    }
+
+    /* MULTI-WORD TOKEN (for بعد الزوال, في الليل) */
+    .token-group {
+      display: flex;
+      gap: 4px;
+    }
+
+    /* VERIFY BUTTON */
+    .btn-verify {
+      display: flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      color: white;
+      border: none;
+      padding: 11px 22px;
+      border-radius: 50px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(77,150,255,0.35);
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .btn-verify:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(77,150,255,0.45); }
+    .btn-verify:active { transform: scale(.96); }
+    .btn-verify:disabled { opacity: .5; cursor: default; transform: none; }
+
+    .btn-retry {
+      display: flex; align-items: center; gap: 8px;
+      background: transparent;
+      color: #888;
+      border: 2px solid #ddd;
+      padding: 9px 18px;
+      border-radius: 50px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .btn-retry:hover { border-color: var(--coral); color: var(--coral); }
+
+    .card-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* FEEDBACK */
+    .feedback {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      animation: fadeSlide .4s ease;
+    }
+    @keyframes fadeSlide { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+    .feedback.show { display: flex; }
+    .feedback.success { background: #d4f7dc; color: #1a7a35; border: 1.5px solid #a8e6b2; }
+    .feedback.error   { background: #ffe0e0; color: #c0392b; border: 1.5px solid #f5b7b1; }
+    .feedback-icon { font-size: 20px; }
+
+    /* LEGEND */
+    .legend {
+      background: rgba(255,255,255,0.7);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 700; color: #555;
+    }
+    .legend-dot {
+      width: 22px; height: 22px; border-radius: 6px;
+      border: 2.5px solid;
+    }
+    .legend-dot.selected { background: #e8f4fd; border-color: var(--blue); }
+    .legend-dot.correct  { background: #d4f7dc; border-color: var(--mint); }
+    .legend-dot.wrong    { background: #ffe0e0; border-color: var(--coral); }
+    .legend-dot.missed   { background: #fff3cd; border-color: var(--orange); }
+
+    /* FINAL MESSAGE */
+    .finale {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: var(--card-bg);
+      border-radius: 28px;
+      padding: 40px 30px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      border: 2px solid rgba(255,255,255,0.8);
+      animation: popIn 0.6s ease;
+    }
+    .finale.show { display: flex; }
+    .finale-emoji { font-size: 72px; margin-bottom: 12px; animation: bounce 1s ease infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    .finale h2 {
+      font-family: 'Tajawal', sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .finale p {
+      font-size: 16px;
+      color: #666;
+      max-width: 360px;
+      line-height: 1.7;
+    }
+    .finale .final-score {
+      margin: 18px 0;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--purple);
+    }
+    .btn-restart {
+      margin-top: 10px;
+      background: linear-gradient(135deg, var(--sun), var(--orange));
+      color: var(--dark);
+      border: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255,154,60,0.35);
+      transition: all 0.2s ease;
+    }
+    .btn-restart:hover { transform: translateY(-3px) scale(1.04); }
+
+    footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 12px;
+      color: rgba(0,0,0,0.35);
+      font-weight: 600;
+    }
+
+    @media(max-width:500px) {
+      .exercise-card { padding: 20px 16px; }
+      .sentence { gap: 8px; }
+      .token { font-size: 17px; padding: 7px 11px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Twinkling stars background -->
+<div class="stars" id="stars"></div>
+
+<div class="container">
+  <header>
+    <div class="header-badge">✦ النحو العربي ✦</div>
+    <h1>تمرين <span>المفعول فيه</span><br/>للزمان</h1>
+    <p class="subtitle">اِنقر على الكلمات التي تمثّل المفعول فيه للزمان في كل جملة 🎯</p>
+  </header>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot selected"></div>
+      <span>محدّد</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot correct"></div>
+      <span>إجابة صحيحة</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot wrong"></div>
+      <span>إجابة خاطئة</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot missed"></div>
+      <span>فائتة</span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrapper">
+    <div class="progress-label">التقدّم</div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="score-badge" id="scoreBadge">0 / 3</div>
+  </div>
+
+  <!-- Exercises will be injected here -->
+  <div id="exercisesContainer"></div>
+
+  <!-- Final message -->
+  <div class="finale" id="finale">
+    <div class="finale-emoji" id="finaleEmoji">🏆</div>
+    <h2 id="finaleTitle">أحسنت يا بطل!</h2>
+    <p id="finaleMsg">لقد أتممت جميع التمارين. استمر في التعلم واجتهد أكثر!</p>
+    <div class="final-score" id="finalScore"></div>
+    <button class="btn-restart" onclick="restartAll()">🔄 إعادة التمرين</button>
+  </div>
+
+  <footer>تمرين تفاعلي في النحو العربي &mdash; المفعول فيه للزمان</footer>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const exercises = [
+  {
+    tokens: [
+      { text: "أقوم", id: "t1_1", correct: false },
+      { text: "من", id: "t1_2", correct: false },
+      { text: "نومي", id: "t1_3", correct: false },
+      { text: "صباحاً", id: "t1_4", correct: true }
+    ]
+  },
+  {
+    tokens: [
+      { text: "نرجع", id: "t2_1", correct: false },
+      { text: "إلى", id: "t2_2", correct: false },
+      { text: "المدرسة", id: "t2_3", correct: false },
+      { text: "بعد الزوال", id: "t2_4", correct: true },
+      { text: "فندرس", id: "t2_5", correct: false },
+      { text: "مدة ساعتين", id: "t2_6", correct: true }
+    ]
+  },
+  {
+    tokens: [
+      { text: "غادرت", id: "t3_1", correct: false },
+      { text: "الحافلة", id: "t3_2", correct: false },
+      { text: "المحطة", id: "t3_3", correct: false },
+      { text: "ظهراً", id: "t3_4", correct: true },
+      { text: "فوصلت", id: "t3_5", correct: false },
+      { text: "إلى", id: "t3_6", correct: false },
+      { text: "المكان المقصود", id: "t3_7", correct: false },
+      { text: "في الليل", id: "t3_8", correct: true }
+    ]
+  }
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let state = exercises.map(() => ({ selected: new Set(), verified: false, correct: false }));
+let completedCount = 0;
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function buildUI() {
+  const container = document.getElementById('exercisesContainer');
+  container.innerHTML = '';
+
+  exercises.forEach((ex, idx) => {
+    const numClass = ['n1','n2','n3'][idx];
+    const card = document.createElement('div');
+    card.className = 'exercise-card';
+    card.id = `card-${idx}`;
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="ex-num ${numClass}">${idx + 1}</div>
+        <div class="card-instruction">اِنقر على المفعول فيه للزمان في الجملة التالية:</div>
+      </div>
+      <div class="sentence" id="sentence-${idx}"></div>
+      <div class="card-actions">
+        <button class="btn-verify" id="verify-${idx}" onclick="verify(${idx})">✅ تحقّق</button>
+        <button class="btn-retry" id="retry-${idx}" onclick="retry(${idx})" style="display:none">🔄 أعد المحاولة</button>
+      </div>
+      <div class="feedback" id="feedback-${idx}">
+        <span class="feedback-icon"></span>
+        <span class="feedback-text"></span>
+      </div>
+    `;
+    container.appendChild(card);
+
+    // Render tokens
+    const sentenceDiv = card.querySelector(`#sentence-${idx}`);
+    ex.tokens.forEach(tok => {
+      const span = document.createElement('span');
+      span.className = 'token';
+      span.id = tok.id;
+      span.textContent = tok.text;
+      span.addEventListener('click', () => toggleToken(idx, tok.id));
+      sentenceDiv.appendChild(span);
+    });
+  });
+}
+
+function toggleToken(exIdx, tokId) {
+  if (state[exIdx].verified) return;
+  const s = state[exIdx].selected;
+  const el = document.getElementById(tokId);
+  if (s.has(tokId)) {
+    s.delete(tokId);
+    el.classList.remove('selected');
+  } else {
+    s.add(tokId);
+    el.classList.add('selected');
+  }
+}
+
+function verify(exIdx) {
+  const ex = exercises[exIdx];
+  const sel = state[exIdx].selected;
+
+  const correctIds = new Set(ex.tokens.filter(t => t.correct).map(t => t.id));
+  let allCorrect = true;
+
+  // Mark each token
+  ex.tokens.forEach(tok => {
+    const el = document.getElementById(tok.id);
+    el.classList.remove('selected');
+    if (tok.correct && sel.has(tok.id)) {
+      el.classList.add('correct'); // correctly selected
+    } else if (!tok.correct && sel.has(tok.id)) {
+      el.classList.add('wrong'); // wrongly selected
+      allCorrect = false;
+    } else if (tok.correct && !sel.has(tok.id)) {
+      el.classList.add('missed'); // missed correct
+      allCorrect = false;
+    }
+  });
+
+  state[exIdx].verified = true;
+  state[exIdx].correct = allCorrect;
+
+  // Show feedback
+  const fb = document.getElementById(`feedback-${exIdx}`);
+  const icon = fb.querySelector('.feedback-icon');
+  const txt = fb.querySelector('.feedback-text');
+  fb.classList.add('show');
+
+  if (allCorrect) {
+    fb.className = 'feedback show success';
+    icon.textContent = '🎉';
+    txt.textContent = 'إجابة صحيحة! أحسنت!';
+  } else {
+    fb.className = 'feedback show error';
+    icon.textContent = '😕';
+    txt.textContent = 'إجابة غير مكتملة. الكلمات الصفراء هي الإجابات التي فاتتك.';
+    document.getElementById(`retry-${exIdx}`).style.display = 'flex';
+  }
+
+  // Disable verify
+  document.getElementById(`verify-${exIdx}`).disabled = true;
+
+  updateProgress();
+  checkCompletion();
+}
+
+function retry(exIdx) {
+  const ex = exercises[exIdx];
+  state[exIdx] = { selected: new Set(), verified: false, correct: false };
+
+  ex.tokens.forEach(tok => {
+    const el = document.getElementById(tok.id);
+    el.className = 'token';
+  });
+
+  const fb = document.getElementById(`feedback-${exIdx}`);
+  fb.className = 'feedback';
+
+  document.getElementById(`verify-${exIdx}`).disabled = false;
+  document.getElementById(`retry-${exIdx}`).style.display = 'none';
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = state.filter(s => s.verified && s.correct).length;
+  const pct = (done / exercises.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('scoreBadge').textContent = `${done} / ${exercises.length}`;
+  completedCount = done;
+}
+
+function checkCompletion() {
+  const allVerified = state.every(s => s.verified);
+  if (!allVerified) return;
+
+  const score = state.filter(s => s.correct).length;
+  const total = exercises.length;
+
+  setTimeout(() => {
+    const finale = document.getElementById('finale');
+    finale.classList.add('show');
+    finale.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const emoji = document.getElementById('finaleEmoji');
+    const title = document.getElementById('finaleTitle');
+    const msg   = document.getElementById('finaleMsg');
+    const fs    = document.getElementById('finalScore');
+
+    if (score === total) {
+      emoji.textContent = '🏆';
+      title.textContent = 'ممتاز! أنت نجم النحو! ⭐';
+      msg.textContent   = 'لقد أجبت على جميع التمارين بشكل صحيح. أحسنت وواصل تميّزك!';
+    } else if (score >= 2) {
+      emoji.textContent = '😊';
+      title.textContent = 'جيد جداً! تقريباً وصلت!';
+      msg.textContent   = 'لديك فهم جيد للمفعول فيه للزمان. أعد المحاولة لتحصل على العلامة الكاملة!';
+    } else {
+      emoji.textContent = '💪';
+      title.textContent = 'لا تيأس، أنت تتعلم!';
+      msg.textContent   = 'المفعول فيه للزمان يحتاج إلى تدريب. أعد المحاولة وستتقنه!';
+    }
+
+    fs.textContent = `نتيجتك: ${score} / ${total}`;
+  }, 600);
+}
+
+function restartAll() {
+  state = exercises.map(() => ({ selected: new Set(), verified: false, correct: false }));
+  completedCount = 0;
+  document.getElementById('finale').classList.remove('show');
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('scoreBadge').textContent = '0 / 3';
+  buildUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── STARS BACKGROUND ────────────────────────────────────────────────────────
+function generateStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 5 + 3;
+    s.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      top: ${Math.random() * 100}%;
+      left: ${Math.random() * 100}%;
+      animation-delay: ${Math.random() * 4}s;
+      animation-duration: ${2 + Math.random() * 3}s;
+    `;
+    container.appendChild(s);
+  }
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+generateStars();
+buildUI();
+</script>
+</body>
+</html>
